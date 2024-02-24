@@ -344,8 +344,12 @@ module sirv_debug_module
   //   0: Ignore data. (nop)
   //   1: Read from address. (read)
   //   2: Read from address. Then write data to address. (write) 
-  //   3: Reserved.
-  wire dtm_req_rd = (dtm_req_bits_op == 2'd1);
+  //   3: Reserved.     
+
+  // Fixed: dtm_req_rd is only used for debugram write control. if dtm_req_rd = 0, the data will be write to debugRAM.  
+  // So, dtm_req_rd must be 1 unless dtm_req_bits_op == 2'd2. 
+  // wire dtm_req_rd = (dtm_req_bits_op == 2'd1);
+  wire dtm_req_rd = !(dtm_req_bits_op == 2'd2);
   wire dtm_req_wr = (dtm_req_bits_op == 2'd2);
 
   wire dtm_req_sel_dbgram   = (dtm_req_bits_addr[4:3] == 2'b0) & (~(dtm_req_bits_addr[2:0] == 3'b111));//0x00-0x06
